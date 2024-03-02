@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-php-demo
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      hello-php: web
+  template:
+    metadata:
+      labels:
+        hello-php: web
+      spec:
+        containers:
+        - name: hello-site
+          image: dparrab/docker-php-sample
+          imagePullPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: php-entrypoint
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    hello-php: web
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30001
+
